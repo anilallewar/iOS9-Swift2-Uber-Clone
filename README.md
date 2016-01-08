@@ -8,10 +8,10 @@ Swift 2, Facebook integration and Parse BaaS application that allow users to
 4. Driver gets to see rides requested in 10 mile radius in table view including the picture, name and email of rider 
 5. Driver can accept/reject ride
 6. Once the driver accepts the ride, he is moved to another screen where
-..1. Show direction plot from current location to pickup point
-..2. Type destination address - search matching address and able to choose 1 address
-..3. See direction plaot from the pickup address and the destination address
-..4. Once driver is at destination, he can end the trip. He will be redirected to the "Rides Requested" page
+  1. Show direction plot from current location to pickup point
+  2. Type destination address - search matching address and able to choose 1 address
+  3. See direction plaot from the pickup address and the destination address
+  4. Once driver is at destination, he can end the trip. He will be redirected to the "Rides Requested" page
 
 ## Pre-requisites
 
