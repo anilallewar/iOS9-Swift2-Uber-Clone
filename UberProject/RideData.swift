@@ -99,4 +99,5 @@ enum RideStatus : String {
     case ACCEPTED = "Accepted"
     case CANCELLED = "Cancelled"
     case COMPLETED = "Completed"
+    case STARTED = "Started"
 }

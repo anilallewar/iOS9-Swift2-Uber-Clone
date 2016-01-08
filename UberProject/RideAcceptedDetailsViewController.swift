@@ -41,6 +41,8 @@ class RideAcceptedDetailsViewController: UIViewController, MKMapViewDelegate, CL
         // Disable the start trip button
         self.tripStartButton.enabled = false
         self.tripStartButton.userInteractionEnabled = false
+        self.tripStartButton.backgroundColor = UIColor.whiteColor()
+        self.tripStartButton.setTitleColor(UIColor.blueColor(), forState: .Normal)
         
         self.autoCompleteTableView = UITableView(frame: CGRectMake(10, self.searchBar.center.y + self.searchBar.frame.height, self.searchBar.frame.width, 120), style: .Plain)
         
@@ -48,6 +50,9 @@ class RideAcceptedDetailsViewController: UIViewController, MKMapViewDelegate, CL
         self.autoCompleteTableView.delegate = self
         self.autoCompleteTableView.dataSource = self
         self.autoCompleteTableView.scrollEnabled = true
+        self.autoCompleteTableView.rowHeight = UITableViewAutomaticDimension
+        self.autoCompleteTableView.estimatedRowHeight = 100.0
+        
         self.autoCompleteTableView.hidden = true
         
         self.view.addSubview(self.autoCompleteTableView)
@@ -92,8 +97,11 @@ class RideAcceptedDetailsViewController: UIViewController, MKMapViewDelegate, CL
     
     
     @IBAction func tripButtonClicked(sender: AnyObject) {
-        print("Trip start button clicked")
-        print("Selected index is: \(self.selectedAddressIndex) and the address is: \(self.searchResults[self.selectedAddressIndex].addressText) and the coordinates are: \(self.searchResults[self.selectedAddressIndex].addressCoordinate)")
+        if self.currentAcceptedRide?.getCurrentRideStatus() == RideStatus.ACCEPTED {
+            self.updateTrip(self.currentAcceptedRide!.getCurrentRideStatus(), nextRideStatus: RideStatus.STARTED)
+        } else if self.currentAcceptedRide?.getCurrentRideStatus() == RideStatus.STARTED {
+            self.updateTrip(self.currentAcceptedRide!.getCurrentRideStatus(), nextRideStatus: RideStatus.COMPLETED)
+        }
     }
     
     func locationManager(manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
@@ -143,9 +151,12 @@ class RideAcceptedDetailsViewController: UIViewController, MKMapViewDelegate, CL
 
     // In a storyboard-based application, you will often want to do a little preparation before navigation
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        let viewController:RiderFeedTableTableViewController = segue.destinationViewController as! RiderFeedTableTableViewController
         
-        viewController.acceptedRideIndex = -1
+        if segue.identifier == "showAvailableRides" {
+            let viewController:RiderFeedTableTableViewController = segue.destinationViewController as! RiderFeedTableTableViewController
+            
+            viewController.acceptedRideIndex = -1
+        }
         self.selectedAddressIndex = -1
     }
     
@@ -155,6 +166,8 @@ class RideAcceptedDetailsViewController: UIViewController, MKMapViewDelegate, CL
         
         let localSearchRequest:MKLocalSearchRequest = MKLocalSearchRequest()
         localSearchRequest.naturalLanguageQuery = searchBarPassed.text
+        // Search 5 km radius
+        localSearchRequest.region = MKCoordinateRegionMakeWithDistance(self.currentAcceptedRide!.getCoordinates(), 5000.0, 5000.0)
         
         let localSearch:MKLocalSearch = MKLocalSearch(request: localSearchRequest)
         localSearch.startWithCompletionHandler { (searchResponse, error) -> Void in
@@ -248,7 +261,8 @@ class RideAcceptedDetailsViewController: UIViewController, MKMapViewDelegate, CL
         }
         
         cell!.contentView.layer.borderColor = UIColor.redColor().CGColor
-        cell!.contentView.layer.borderWidth = 1.0
+        cell!.contentView.layer.borderWidth = 0.5
+        cell!.textLabel?.sizeToFit()
         
         return cell!
     }
@@ -265,6 +279,92 @@ class RideAcceptedDetailsViewController: UIViewController, MKMapViewDelegate, CL
             self.tripStartButton.enabled = true
             self.tripStartButton.userInteractionEnabled = true
 
+        }
+    }
+    
+    func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
+        return UITableViewAutomaticDimension
+    }
+    
+    func tableView(tableView: UITableView, estimatedHeightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
+        return UITableViewAutomaticDimension
+    }
+    
+    private func updateTrip(currentRideStatus:RideStatus, nextRideStatus:RideStatus) {
+        let rideQuery:PFQuery = PFQuery(className: "Rides")
+        
+        rideQuery.getObjectInBackgroundWithId(self.currentAcceptedRide!.getObjectId()) { (result, error) -> Void in
+            if error != nil {
+                self.showAlert("Error getting ride information", message: (error?.localizedDescription)!)
+            } else if let object = result {
+                if let currentStatus = object["status"] as? String {
+                    if currentStatus == currentRideStatus.rawValue {
+                        object["status"] = nextRideStatus.rawValue
+                        
+                        if nextRideStatus == RideStatus.STARTED {
+                            object["destinationAddress"] = self.searchResults[self.selectedAddressIndex].addressText
+                            
+                            // Parse limits only 1 geo-point per class. Since we already have the address it is not really necessary to store the geopoint in Parse
+                            /*
+                            let destGeoPoint = PFGeoPoint(latitude: destCoordinate.latitude, longitude: destCoordinate.longitude)
+                            object["destinationCoords"] = destGeoPoint
+                            */
+                            
+                            self.currentAcceptedRide!.setDestinationAddress(self.searchResults[self.selectedAddressIndex].addressText)
+                            self.currentAcceptedRide!.setDestinationCoordinates(self.searchResults[self.selectedAddressIndex].addressCoordinate)
+                            
+                            let startLocation:CLLocation = CLLocation(latitude: self.currentAcceptedRide!.getCoordinates().latitude, longitude: self.currentAcceptedRide!.getCoordinates().longitude)
+                            let endLocation:CLLocation = CLLocation(latitude: self.currentAcceptedRide!.getDestinationCoordinates()!.latitude, longitude: self.currentAcceptedRide!.getDestinationCoordinates()!.longitude)
+                            
+                            // Set distance in miles between the 2 locations
+                            object["distanceInMiles"] = startLocation.distanceFromLocation(endLocation) / 1609
+                        }
+                        
+                        object.saveInBackgroundWithBlock({ (success, error) -> Void in
+                            if error != nil {
+                                self.showAlert("Error beginning ride", message: (error?.localizedDescription)!)
+                            } else {
+                                self.currentAcceptedRide!.setCurrentRideStatus(nextRideStatus)
+                                
+                                // Change the button title if trip started
+                                if self.currentAcceptedRide!.getCurrentRideStatus() == RideStatus.STARTED {
+                                    self.plotOverlayFromStartToDestAddress()
+                                    self.tripStartButton.setTitle("End Trip", forState: .Normal)
+                                } else if self.currentAcceptedRide!.getCurrentRideStatus() == RideStatus.COMPLETED {
+                                    // Segue back to the table
+                                    self.performSegueWithIdentifier("showAvailableRides", sender: self)
+                                }
+                            }
+                        })
+                    }
+                }
+            }
+        }
+    }
+    
+    private func plotOverlayFromStartToDestAddress() {
+        
+        let directionsRequest = MKDirectionsRequest()
+        
+        let markPickupAddress = MKPlacemark(coordinate: self.currentAcceptedRide!.getCoordinates(), addressDictionary: nil)
+        let markDestinationAddress = MKPlacemark(coordinate: self.currentAcceptedRide!.getDestinationCoordinates()!, addressDictionary: nil)
+        
+        directionsRequest.source = MKMapItem(placemark: markPickupAddress)
+        directionsRequest.destination = MKMapItem(placemark: markDestinationAddress)
+        directionsRequest.transportType = MKDirectionsTransportType.Automobile
+        let directions = MKDirections(request: directionsRequest)
+        
+        directions.calculateDirectionsWithCompletionHandler { (response, error) -> Void in
+            if error != nil {
+                self.showAlert("Error calculating directions", message: (error?.localizedDescription)!)
+            } else {
+                if let response = response {
+                    if let calculatedRoute = response.routes[0] as? MKRoute {
+                        self.acceptedRideMapView.removeOverlays(self.acceptedRideMapView.overlays)
+                        self.acceptedRideMapView.addOverlay(calculatedRoute.polyline)
+                    }
+                }
+            }
         }
     }
     
