@@ -23,7 +23,7 @@ Swift 2, Facebook integration and Parse BaaS application that allow users to
 2. Open `Uber.xcodeproj` in XCode.
 3. Parse setup
   1. Create a new project in [Parse](https://www.parse.com/) and note the application ID and client key for your application. Use the Parse [Quickstart](https://www.parse.com/apps/quickstart) to get started quickly. 
-  2. Open the `ParseStarterProject/AppDelegate.swift` file and make changes for Parse application ID and client key.
+  2. Open the `UberProject/AppDelegate.swift` file and make changes for Parse application ID and client key.
 ```
         //Uncomment and fill in with your Parse credentials:
         Parse.setApplicationId("<<Your_Application_Id>>",
@@ -87,10 +87,14 @@ Swift 2, Facebook integration and Parse BaaS application that allow users to
 <img src="./Screenshots/ScreenShot_7.png" alt="screenshot7" width="200" /> &nbsp;&nbsp;&nbsp;&nbsp;
 <img src="./Screenshots/ScreenShot_8.png" alt="screenshot8" width="200" />
 <br/>
-<img src="./Screenshots/ScreenShot_9.png" alt="screenshot9" width="200" align="top"/> &nbsp;&nbsp;&nbsp;&nbsp;
-<img src="./Screenshots/ScreenShot_10.png" alt="screenshot10" width="200" /> &nbsp;&nbsp;&nbsp;&nbsp;
-<img src="./Screenshots/ScreenShot_11.png" alt="screenshot11" width="200" />
 <br/>
+<br/>
+<img src="./Screenshots/ScreenShot_9.png" alt="screenshot9" width="600" align="top"/>
+<br/>
+<br/>
+<br/>
+<img src="./Screenshots/ScreenShot_10.png" alt="screenshot10" width="200" /> &nbsp;&nbsp;&nbsp;&nbsp;
+<img src="./Screenshots/ScreenShot_11.png" alt="screenshot11" width="200" /> &nbsp;&nbsp;&nbsp;&nbsp;
 <img src="./Screenshots/ScreenShot_12.png" alt="screenshot12" width="200" /> 
 <br/>
 ---
@@ -113,6 +117,8 @@ Swift 2, Facebook integration and Parse BaaS application that allow users to
 <img src="./Screenshots/ScreenShot_21.png" alt="screenshot21" width="200" /> &nbsp;&nbsp;&nbsp;&nbsp;
 <img src="./Screenshots/ScreenShot_22.png" alt="screenshot22" width="200" />
 <br/>
-<img src="./Screenshots/ScreenShot_23.png" alt="screenshot23" width="200" align="top"/>
+<br/>
+<br/>
+<img src="./Screenshots/ScreenShot_23.png" alt="screenshot23" width="600" align="top"/>
 <br/>
 ---
