@@ -344,28 +344,16 @@ class RideAcceptedDetailsViewController: UIViewController, MKMapViewDelegate, CL
     
     private func plotOverlayFromStartToDestAddress() {
         
-        let directionsRequest = MKDirectionsRequest()
+        self.acceptedRideMapView.removeOverlays(self.acceptedRideMapView.overlays)
         
-        let markPickupAddress = MKPlacemark(coordinate: self.currentAcceptedRide!.getCoordinates(), addressDictionary: nil)
         let markDestinationAddress = MKPlacemark(coordinate: self.currentAcceptedRide!.getDestinationCoordinates()!, addressDictionary: nil)
         
-        directionsRequest.source = MKMapItem(placemark: markPickupAddress)
-        directionsRequest.destination = MKMapItem(placemark: markDestinationAddress)
-        directionsRequest.transportType = MKDirectionsTransportType.Automobile
-        let directions = MKDirections(request: directionsRequest)
+        let destinationMapItem = MKMapItem(placemark: markDestinationAddress)
+        destinationMapItem.name = "Trip Destination"
         
-        directions.calculateDirectionsWithCompletionHandler { (response, error) -> Void in
-            if error != nil {
-                self.showAlert("Error calculating directions", message: (error?.localizedDescription)!)
-            } else {
-                if let response = response {
-                    if let calculatedRoute = response.routes[0] as? MKRoute {
-                        self.acceptedRideMapView.removeOverlays(self.acceptedRideMapView.overlays)
-                        self.acceptedRideMapView.addOverlay(calculatedRoute.polyline)
-                    }
-                }
-            }
-        }
+        let launchOptions = [MKLaunchOptionsDirectionsModeKey : MKLaunchOptionsDirectionsModeDriving]
+        
+        destinationMapItem.openInMapsWithLaunchOptions(launchOptions)
     }
     
     private func showAlert (title:String, message:String) {
