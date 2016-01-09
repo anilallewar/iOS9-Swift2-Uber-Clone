@@ -10,8 +10,9 @@ Swift 2, Facebook integration and Parse BaaS application that allow users to
 6. Once the driver accepts the ride, he is moved to another screen where
   1. Show direction plot from current location to pickup point
   2. Type destination address - search matching address and able to choose 1 address
-  3. See direction plaot from the pickup address and the destination address
-  4. Once driver is at destination, he can end the trip. He will be redirected to the "Rides Requested" page
+  3. Once driver "Starts" trip, he will be redirected to Apple maps so that he can see the directions to the destination,
+  4. Once the driver is at the end of trip, he can stop directions and click on "Back To Uber" link to come back to the application.
+  5. The driver can now end the trip. He will be redirected to the "Rides Requested" page
 
 ## Pre-requisites
 
@@ -113,12 +114,19 @@ Swift 2, Facebook integration and Parse BaaS application that allow users to
 <img src="./Screenshots/ScreenShot_18.png" alt="screenshot18" width="200" /> &nbsp;&nbsp;&nbsp;&nbsp;
 <img src="./Screenshots/ScreenShot_19.png" alt="screenshot19" width="200" />
 <br/>
+---
+### Directions to destination
 <img src="./Screenshots/ScreenShot_20.png" alt="screenshot20" width="200" /> &nbsp;&nbsp;&nbsp;&nbsp;
 <img src="./Screenshots/ScreenShot_21.png" alt="screenshot21" width="200" /> &nbsp;&nbsp;&nbsp;&nbsp;
 <img src="./Screenshots/ScreenShot_22.png" alt="screenshot22" width="200" />
 <br/>
+---
+### End trip
+<img src="./Screenshots/ScreenShot_23.png" alt="screenshot23" width="200" /> &nbsp;&nbsp;&nbsp;&nbsp;
+<img src="./Screenshots/ScreenShot_24.png" alt="screenshot24" width="200" /> &nbsp;&nbsp;&nbsp;&nbsp;
+<img src="./Screenshots/ScreenShot_25.png" alt="screenshot25" width="200" />
 <br/>
 <br/>
-<img src="./Screenshots/ScreenShot_23.png" alt="screenshot23" width="600" align="top"/>
+<img src="./Screenshots/ScreenShot_23.png" alt="screenshot26" width="600" align="top"/>
 <br/>
 ---
