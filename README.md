@@ -127,6 +127,6 @@ Swift 2, Facebook integration and Parse BaaS application that allow users to
 <img src="./Screenshots/ScreenShot_25.png" alt="screenshot25" width="200" />
 <br/>
 <br/>
-<img src="./Screenshots/ScreenShot_23.png" alt="screenshot26" width="600" align="top"/>
+<img src="./Screenshots/ScreenShot_26.png" alt="screenshot26" width="600" align="top"/>
 <br/>
 ---
