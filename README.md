@@ -13,6 +13,7 @@ Swift 2, Facebook integration and Parse BaaS application that allow users to
   3. Once driver "Starts" trip, he will be redirected to Apple maps so that he can see the directions to the destination,
   4. Once the driver is at the end of trip, he can stop directions and click on "Back To Uber" link to come back to the application.
   5. The driver can now end the trip. He will be redirected to the "Rides Requested" page
+7. Once the ride has been accepted, the rider can see where the driver is (via a car icon on screen) and the estimated time of arrival.
 
 ## Pre-requisites
 
@@ -113,6 +114,11 @@ Swift 2, Facebook integration and Parse BaaS application that allow users to
 <img src="./Screenshots/ScreenShot_17.png" alt="screenshot17" width="200" /> &nbsp;&nbsp;&nbsp;&nbsp;
 <img src="./Screenshots/ScreenShot_18.png" alt="screenshot18" width="200" /> &nbsp;&nbsp;&nbsp;&nbsp;
 <img src="./Screenshots/ScreenShot_19.png" alt="screenshot19" width="200" />
+<br/>
+---
+### Rider sees the driver's current location and ETA
+<br/>
+<img src="./Screenshots/ScreenShot_27.png" alt="screenshot27" width="200" /> 
 <br/>
 ---
 ### Directions to destination
