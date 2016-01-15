@@ -415,7 +415,9 @@ class RiderViewController: UIViewController, MKMapViewDelegate, CLLocationManage
             if error != nil {
                 self.showAlert("Error getting ride information", message: (error?.localizedDescription)!)
             } else if let driverETAResponse = etaResponse {
-                self.locationLabel.text = "Your ride in approximately \(round(driverETAResponse.expectedTravelTime / 60)) minutes"
+                let timeInMinutes = driverETAResponse.expectedTravelTime / 60
+                // Round to 1 digits
+                self.locationLabel.text = "Your ride in approximately \(round(timeInMinutes * 10) / 10) minutes"
                 let driverAnnotation = CarImageAnnotation()
                 driverAnnotation.coordinate = CLLocationCoordinate2DMake(driverLocation.latitude, driverLocation.longitude)
                 driverAnnotation.imageName = "car.jpg"
