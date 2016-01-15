@@ -62,7 +62,8 @@ class RideAcceptedDetailsViewController: UIViewController, MKMapViewDelegate, CL
         // Do any additional setup after loading the view.
         self.locationManager.delegate = self
         self.locationManager.desiredAccuracy = kCLLocationAccuracyBest
-        self.locationManager.requestWhenInUseAuthorization()
+        // Since we need to send the driver location even if we are in Apple maps, we want to keep updating location even in backgroun
+        self.locationManager.requestAlwaysAuthorization()
         
         self.acceptedRideMapView.showsUserLocation = true
         self.locationManager.startUpdatingLocation()
@@ -107,6 +108,29 @@ class RideAcceptedDetailsViewController: UIViewController, MKMapViewDelegate, CL
     func locationManager(manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         let currentUserCoordinate = locations[0].coordinate
         
+        if self.currentAcceptedRide!.getCurrentRideStatus() == RideStatus.ACCEPTED {
+            // Add initial overlay and stop updating location
+            self.plotOverlayToPickupAddress(currentUserCoordinate)
+        } else if self.currentAcceptedRide!.getCurrentRideStatus() == RideStatus.STARTED {
+            // Update driver current location
+            // Update the current driver location in database
+            PFGeoPoint.geoPointForCurrentLocationInBackground({ (geoPoint, error) -> Void in
+                if error != nil {
+                    self.showAlert("Error getting driver location", message: (error?.localizedDescription)!)
+                } else {
+                    if let driverGeoPoint = geoPoint {
+                        PFUser.currentUser()!["currentLocation"] = driverGeoPoint
+                        PFUser.currentUser()?.saveInBackground()
+                    }
+                }
+            })
+        } else if self.currentAcceptedRide?.getCurrentRideStatus() == RideStatus.COMPLETED {
+            // Stop sending location data if the ride is completed
+            self.locationManager.stopUpdatingLocation()
+        }
+    }
+    
+    private func plotOverlayToPickupAddress(currentUserCoordinate:CLLocationCoordinate2D) -> Void {
         let destinationCoordinate = self.currentAcceptedRide!.getCoordinates()
         
         let directionsRequest = MKDirectionsRequest()
@@ -121,17 +145,31 @@ class RideAcceptedDetailsViewController: UIViewController, MKMapViewDelegate, CL
         
         directions.calculateDirectionsWithCompletionHandler { (response, error) -> Void in
             if error != nil {
-                self.showAlert("Error calculating directions", message: (error?.localizedDescription)!)
+                // self.showAlert("Error calculating directions", message: (error?.localizedDescription)!)
             } else {
                 if let response = response {
                     if let calculatedRoute = response.routes[0] as? MKRoute {
-                        self.acceptedRideMapView.addOverlay(calculatedRoute.polyline)
-                        // Stop updating locations once the initial overlay is laid
-                        self.locationManager.stopUpdatingLocation()
+                        // Update the current driver location in database
+                        PFGeoPoint.geoPointForCurrentLocationInBackground({ (geoPoint, error) -> Void in
+                            if error != nil {
+                                self.showAlert("Error getting driver location", message: (error?.localizedDescription)!)
+                            } else {
+                                if let driverGeoPoint = geoPoint {
+                                    PFUser.currentUser()!["currentLocation"] = driverGeoPoint
+                                    PFUser.currentUser()?.saveInBackground()
+                                }
+                            }
+                        })
+                        
+                        dispatch_async(dispatch_get_main_queue(), { () -> Void in
+                            self.acceptedRideMapView.removeOverlays(self.acceptedRideMapView.overlays)
+                            self.acceptedRideMapView.addOverlay(calculatedRoute.polyline)
+                        })
                     }
                 }
             }
         }
+
     }
     
     // How to render the line overlay on the map
@@ -328,7 +366,7 @@ class RideAcceptedDetailsViewController: UIViewController, MKMapViewDelegate, CL
                                 
                                 // Change the button title if trip started
                                 if self.currentAcceptedRide!.getCurrentRideStatus() == RideStatus.STARTED {
-                                    self.plotOverlayFromStartToDestAddress()
+                                    self.displayDirectionInMapFromStartToDestAddress()
                                     self.tripStartButton.setTitle("End Trip", forState: .Normal)
                                 } else if self.currentAcceptedRide!.getCurrentRideStatus() == RideStatus.COMPLETED {
                                     // Segue back to the table
@@ -342,7 +380,7 @@ class RideAcceptedDetailsViewController: UIViewController, MKMapViewDelegate, CL
         }
     }
     
-    private func plotOverlayFromStartToDestAddress() {
+    private func displayDirectionInMapFromStartToDestAddress() {
         
         self.acceptedRideMapView.removeOverlays(self.acceptedRideMapView.overlays)
         
@@ -357,13 +395,14 @@ class RideAcceptedDetailsViewController: UIViewController, MKMapViewDelegate, CL
     }
     
     private func showAlert (title:String, message:String) {
-        let alert = UIAlertController(title: title, message: message, preferredStyle: UIAlertControllerStyle.Alert)
-        
-        alert.addAction(UIAlertAction(title: "OK", style: .Default, handler: { (action) -> Void in
-            self.dismissViewControllerAnimated(true, completion: nil)
-        }))
-        
-        self.presentViewController(alert, animated: true, completion: nil)
+        if self.presentedViewController == nil {
+            let alert = UIAlertController(title: title, message: message, preferredStyle: UIAlertControllerStyle.Alert)
+            
+            alert.addAction(UIAlertAction(title: "OK", style: .Default, handler: { (action) -> Void in
+                self.dismissViewControllerAnimated(true, completion: nil)
+            }))
+            self.presentViewControllerFromVisibleViewController(alert, animated: true, completion: nil)
+        }
     }
 }
 

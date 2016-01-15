@@ -56,7 +56,7 @@
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <prototypes>
                             <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="cell" rowHeight="130" id="2Wp-fy-Nw4" customClass="RideFeedTableViewCell" customModule="Uber" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="92" width="320" height="130"/>
+                                <rect key="frame" x="0.0" y="28" width="320" height="130"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="2Wp-fy-Nw4" id="19Q-Ug-HHc">
                                     <rect key="frame" x="0.0" y="0.0" width="320" height="129.5"/>
@@ -143,7 +143,7 @@
                         <rect key="frame" x="0.0" y="0.0" width="320" height="480"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" mapType="standard" translatesAutoresizingMaskIntoConstraints="NO" id="Eke-WC-BXt">
+                            <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" misplaced="YES" mapType="standard" translatesAutoresizingMaskIntoConstraints="NO" id="Eke-WC-BXt">
                                 <rect key="frame" x="-4" y="72" width="328" height="408"/>
                             </mapView>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="mDy-xL-uQ3">
@@ -400,6 +400,7 @@
                     <simulatedScreenMetrics key="simulatedDestinationMetrics"/>
                     <connections>
                         <outlet property="activityIndicator" destination="h3a-Mu-dEs" id="d76-AE-ofJ"/>
+                        <outlet property="headerLabel" destination="XQ4-ig-7BV" id="AKs-Wa-0xE"/>
                         <outlet property="locationLabel" destination="R9x-wy-9ep" id="qqK-1P-FBq"/>
                         <outlet property="riderMapView" destination="fwB-0p-Qjt" id="KSP-8W-KAe"/>
                     </connections>
@@ -413,9 +414,9 @@
         <image name="signinwithfacebook.png" width="492" height="108"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="Cgm-zc-BlR"/>
         <segue reference="ZPz-8Q-HMb"/>
-        <segue reference="jTB-0t-de6"/>
+        <segue reference="DDP-27-hR2"/>
         <segue reference="Cix-7B-kvM"/>
+        <segue reference="jTB-0t-de6"/>
     </inferredMetricsTieBreakers>
 </document>

@@ -184,6 +184,7 @@ class RiderFeedTableTableViewController: UITableViewController {
                 if let currentStatus = object["status"] as? String {
                     if currentStatus == RideStatus.REQUESTED.rawValue {
                         object["status"] = RideStatus.ACCEPTED.rawValue
+                        object["driverUserId"] = PFUser.currentUser()?.objectId
                         
                         object.saveInBackgroundWithBlock({ (success, error) -> Void in
                             if error != nil {
@@ -222,12 +223,14 @@ class RiderFeedTableTableViewController: UITableViewController {
 
     
     private func showAlert (title:String, message:String) {
-        let alert = UIAlertController(title: title, message: message, preferredStyle: UIAlertControllerStyle.Alert)
-        
-        alert.addAction(UIAlertAction(title: "OK", style: .Default, handler: { (action) -> Void in
-            self.dismissViewControllerAnimated(true, completion: nil)
-        }))
-        
-        self.presentViewController(alert, animated: true, completion: nil)
+        if self.presentedViewController == nil {
+            let alert = UIAlertController(title: title, message: message, preferredStyle: UIAlertControllerStyle.Alert)
+            
+            alert.addAction(UIAlertAction(title: "OK", style: .Default, handler: { (action) -> Void in
+                self.dismissViewControllerAnimated(true, completion: nil)
+            }))
+            
+            self.presentViewController(alert, animated: true, completion: nil)
+        }
     }
 }
