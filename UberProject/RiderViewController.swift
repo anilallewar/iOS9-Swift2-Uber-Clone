@@ -205,11 +205,23 @@ class RiderViewController: UIViewController, MKMapViewDelegate, CLLocationManage
         } else if annotation is CarImageAnnotation {
             let carAnnotationView = self.getAnnotationView(mapView, annotation: annotation, reUseId: "car")
             let carAnnotation = carAnnotationView?.annotation as! CarImageAnnotation
-            carAnnotationView?.image = UIImage(named: carAnnotation.imageName)
+            carAnnotationView?.image = self.resizeImage(UIImage(named: carAnnotation.imageName)!, newWidth: 40.0)
             return carAnnotationView
         } else {
             return self.getAnnotationView(mapView, annotation: annotation, reUseId: "pin")
         }
+    }
+    
+    private func resizeImage(image: UIImage, newWidth: CGFloat) -> UIImage {
+        
+        let scale = newWidth / image.size.width
+        let newHeight = image.size.height * scale
+        UIGraphicsBeginImageContext(CGSizeMake(newWidth, newHeight))
+        image.drawInRect(CGRectMake(0, 0, newWidth, newHeight))
+        let newImage = UIGraphicsGetImageFromCurrentImageContext()
+        UIGraphicsEndImageContext()
+        
+        return newImage
     }
     
     // Get annotation view based on whether the annotation is for car/pin
@@ -217,7 +229,12 @@ class RiderViewController: UIViewController, MKMapViewDelegate, CLLocationManage
         var pinViewAnnotation = mapView.dequeueReusableAnnotationViewWithIdentifier(reUseId)
         
         if pinViewAnnotation == nil {
-            pinViewAnnotation = MKPinAnnotationView(annotation: annotation, reuseIdentifier: reUseId)
+            if annotation is CarImageAnnotation {
+                pinViewAnnotation = MKAnnotationView(annotation: annotation, reuseIdentifier: reUseId)
+            } else {
+                pinViewAnnotation = MKPinAnnotationView(annotation: annotation, reuseIdentifier: reUseId)
+            }
+            
             pinViewAnnotation!.canShowCallout = true
             
             /*
@@ -398,7 +415,7 @@ class RiderViewController: UIViewController, MKMapViewDelegate, CLLocationManage
             if error != nil {
                 self.showAlert("Error getting ride information", message: (error?.localizedDescription)!)
             } else if let driverETAResponse = etaResponse {
-                self.locationLabel.text = "Your ride will be here in approximately \(round(driverETAResponse.expectedTravelTime / 60)) minutes"
+                self.locationLabel.text = "Your ride in approximately \(round(driverETAResponse.expectedTravelTime / 60)) minutes"
                 let driverAnnotation = CarImageAnnotation()
                 driverAnnotation.coordinate = CLLocationCoordinate2DMake(driverLocation.latitude, driverLocation.longitude)
                 driverAnnotation.imageName = "car.jpg"
