@@ -418,6 +418,14 @@ class RiderViewController: UIViewController, MKMapViewDelegate, CLLocationManage
                 let timeInMinutes = driverETAResponse.expectedTravelTime / 60
                 // Round to 1 digits
                 self.locationLabel.text = "Your ride in approximately \(round(timeInMinutes * 10) / 10) minutes"
+                // Set the map to show both the driver and pickup location
+                let latDelta = abs(driverLocation.latitude - self.currentRideData.getCoordinates().latitude) * 2 + 0.005
+                let longDelta = abs(driverLocation.longitude - self.currentRideData.getCoordinates().longitude) * 2 + 0.005
+                
+                let mapRegion = MKCoordinateRegionMake(self.currentRideData.getCoordinates(), MKCoordinateSpanMake(latDelta, longDelta))
+                
+                self.riderMapView.setRegion(mapRegion, animated: true)
+                
                 let driverAnnotation = CarImageAnnotation()
                 driverAnnotation.coordinate = CLLocationCoordinate2DMake(driverLocation.latitude, driverLocation.longitude)
                 driverAnnotation.imageName = "car.jpg"
