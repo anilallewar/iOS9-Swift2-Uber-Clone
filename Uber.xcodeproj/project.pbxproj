@@ -24,6 +24,7 @@
 		A27BD4801C334F2B00212E99 /* RiderFeedTableTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A27BD47F1C334F2B00212E99 /* RiderFeedTableTableViewController.swift */; };
 		A27BD4841C3376C500212E99 /* RideFeedTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A27BD4831C3376C500212E99 /* RideFeedTableViewCell.swift */; };
 		A27BD4861C33D3CF00212E99 /* RideAcceptedDetailsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A27BD4851C33D3CF00212E99 /* RideAcceptedDetailsViewController.swift */; };
+		A2E1AFA51C49C515004EB53A /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = A2E1AFA41C49C515004EB53A /* LaunchScreen.storyboard */; };
 		A2F473EE1C46B6C2000FA0D6 /* car.jpg in Resources */ = {isa = PBXBuildFile; fileRef = A2F473ED1C46B6C2000FA0D6 /* car.jpg */; };
 		A2FED5381C223F1300975D4F /* ParseFacebookUtilsV4.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A2FED5371C223F1300975D4F /* ParseFacebookUtilsV4.framework */; };
 		A2FED53C1C223F5100975D4F /* FBSDKCoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A2FED5391C223F5100975D4F /* FBSDKCoreKit.framework */; };
@@ -55,6 +56,7 @@
 		A27BD47F1C334F2B00212E99 /* RiderFeedTableTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RiderFeedTableTableViewController.swift; sourceTree = "<group>"; };
 		A27BD4831C3376C500212E99 /* RideFeedTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RideFeedTableViewCell.swift; sourceTree = "<group>"; };
 		A27BD4851C33D3CF00212E99 /* RideAcceptedDetailsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RideAcceptedDetailsViewController.swift; sourceTree = "<group>"; };
+		A2E1AFA41C49C515004EB53A /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = LaunchScreen.storyboard; sourceTree = "<group>"; };
 		A2F473ED1C46B6C2000FA0D6 /* car.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = car.jpg; sourceTree = "<group>"; };
 		A2FED5371C223F1300975D4F /* ParseFacebookUtilsV4.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = ParseFacebookUtilsV4.framework; sourceTree = "<group>"; };
 		A2FED5391C223F5100975D4F /* FBSDKCoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = FBSDKCoreKit.framework; sourceTree = "<group>"; };
@@ -134,6 +136,7 @@
 				A27BD4831C3376C500212E99 /* RideFeedTableViewCell.swift */,
 				A27BD4851C33D3CF00212E99 /* RideAcceptedDetailsViewController.swift */,
 				A207187C1C44679900772C68 /* ExtensionUIViewController.swift */,
+				A2E1AFA41C49C515004EB53A /* LaunchScreen.storyboard */,
 			);
 			name = Uber;
 			path = UberProject;
@@ -233,6 +236,7 @@
 				814C3ACA1B69877600E307BB /* Main.storyboard in Resources */,
 				A21624DC1C2A199B00A22B18 /* yes.jpeg in Resources */,
 				A21624DD1C2A199B00A22B18 /* cancel.jpeg in Resources */,
+				A2E1AFA51C49C515004EB53A /* LaunchScreen.storyboard in Resources */,
 				814C3ACB1B69877600E307BB /* Images.xcassets in Resources */,
 				A2FED5411C234D0C00975D4F /* signinwithfacebook.png in Resources */,
 			);
